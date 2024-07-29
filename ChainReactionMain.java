@@ -90,9 +90,36 @@ public class ChainReactionMain {
     }
 
     public static void cleanData(ArrayList<ArrayList<String>> wordSets){
-	/**Add Code here to clean dataset**/
-	    
-        validate(wordSets);
+	    ArrayList<String> validWords = new ArrayList<>();
+            for (ArrayList<String> row : wordSets) {
+                if (row.size() > 1) {
+                validWords.add(row.get(0));
+                }
+            }
+
+            // remove duplicates from validWords
+            validWords = new ArrayList<>(new HashSet<>(validWords));
+
+            // Step 2: filter out rows to ensure each row has more than one valid word
+            ArrayList<ArrayList<String>> filteredWordSets = new ArrayList<>();
+            for (ArrayList<String> row : wordSets) {
+                ArrayList<String> filteredRow = new ArrayList<>();
+                for (String word : row) {
+                    if (validWords.contains(word)) {
+                        filteredRow.add(word);
+                    }
+                }
+                if (filteredRow.size() > 1) { // ensure the row has more than one valid word
+                    filteredWordSets.add(filteredRow);
+                }
+            }
+
+            // update the wordSets with filteredWordSets
+            wordSets.clear();
+            wordSets.addAll(filteredWordSets);
+
+            // validate the cleaned dataset
+            validate(wordSets);
     }
     public static void validate(ArrayList<ArrayList<String>> wordSets){
         final int wordCountValid = 8033;
